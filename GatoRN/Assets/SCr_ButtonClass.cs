@@ -4,17 +4,18 @@ using UnityEngine.UI;
 public class SCr_ButtonClass : MonoBehaviour
 {
     public bool active, playerColor;
-    private GameObject[] buttons;
-    SCR_BestGatoPlayerLAN gatoPlayerLAN;
+    public static GameObject[] buttons;
 
     private void Start()
     {
-        gatoPlayerLAN = FindObjectOfType<SCR_BestGatoPlayerLAN>();
         buttons = GameObject.FindGameObjectsWithTag("buttons");
     }
 
     public void OnButtonClicked()
     {
+        if (SCR_GameManager.endGame)
+            return;
+
         if (!SCR_GameManager.isPlayerTurn || active)
             return;
         active = true;
@@ -24,11 +25,11 @@ public class SCr_ButtonClass : MonoBehaviour
         {
             if (buttons[i] == this.gameObject)
             {
-                SCR_GameManager.boardMap[i] = playerColor ? 1 : 2;
-                gatoPlayerLAN.lastButtonClicked = i;
+                SCR_GameManager.boardMap[i / 3 , i % 3] = playerColor ? 1 : 2;
+                SCR_BestGatoPlayerLAN.lastButtonClicked = i;
             }
         }
-        SCR_GameManager.NextTurn();
+        FindObjectOfType<SCR_GameManager>().NextTurn();
     }
 
     public void PickFromAI()
@@ -40,10 +41,17 @@ public class SCr_ButtonClass : MonoBehaviour
         {
             if (buttons[i] == this.gameObject)
             {
-                SCR_GameManager.boardMap[i] = playerColor ? 1 : 2;
-                gatoPlayerLAN.lastButtonClicked = i;
+                SCR_GameManager.boardMap[i / 3 , i % 3] = playerColor ? 1 : 2;
+                SCR_BestGatoPlayerLAN.lastButtonClicked = i;
             }
         }
-        SCR_GameManager.NextTurn();
+        FindObjectOfType<SCR_GameManager>().NextTurn();
+    }
+
+    public void ResetButton()
+    {
+        active = false;
+        playerColor = false;
+        GetComponent<Image>().color = Color.white;
     }
 }
