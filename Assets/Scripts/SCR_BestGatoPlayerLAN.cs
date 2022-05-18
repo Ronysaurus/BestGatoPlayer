@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using LitJson;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,6 +21,9 @@ public class SCR_BestGatoPlayerLAN : MonoBehaviour
         options = new List<string>();
         randomOptions = new List<string>();
         banned = new List<string>();
+        if (!PlayerPrefs.HasKey("data"))
+            PlayerPrefs.SetString("data", "");
+        Debug.Log(PlayerPrefs.GetString("data"));
     }
 
     public void PlayTurn()
@@ -40,10 +44,11 @@ public class SCR_BestGatoPlayerLAN : MonoBehaviour
     {
         options.Clear();
         banned.Clear();
-        if (PlayerPrefs.HasKey(boardState))
+        JsonData data = JsonMapper.ToObject(PlayerPrefs.GetString("data"));
+        if (data.ContainsKey(boardState))
         {
             Debug.Log("DejaVu");
-            string result = PlayerPrefs.GetString(boardState);
+            string result = data[boardState].ToString();
             for (int i = 0; i < result.Split(',').Length; i++)
                 banned.Add(result.Split(',')[i]);
         }
@@ -64,13 +69,15 @@ public class SCR_BestGatoPlayerLAN : MonoBehaviour
     public void DeleteBadOption()
     {
         string past = "";
-        if (PlayerPrefs.HasKey(lastBoardState))
+        JsonData data = JsonMapper.ToObject(PlayerPrefs.GetString("data"));
+        if (data.ContainsKey(boardState))
         {
-            past = PlayerPrefs.GetString(lastBoardState);
+            past = data[boardState].ToString();
             Debug.Log("new mistake");
         }
         Debug.Log(lastindex);
-        PlayerPrefs.SetString(lastBoardState, past + lastindex.ToString() + ",");
+        data[lastBoardState] = past + lastindex.ToString() + ",";
+        PlayerPrefs.SetString("data", data.ToString());
         Debug.Log("boardState: " + lastBoardState + " mistakes: " + past + lastindex.ToString());
     }
 
@@ -81,7 +88,7 @@ public class SCR_BestGatoPlayerLAN : MonoBehaviour
         Debug.Log("I can't win this");
     }
 
-     public void Randomchoose()
+    public void Randomchoose()
     {
         for (int i = 0; i < 9; i++)
         {
