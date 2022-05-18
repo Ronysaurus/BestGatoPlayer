@@ -59,6 +59,11 @@ public class SCR_BestGatoPlayerLAN : MonoBehaviour
             {
                 if (data[boardState].ContainsKey(i.ToString()))
                 {
+                    if (int.Parse(data[boardState][i.ToString()].ToString()) == 1)
+                    {
+                        Debug.Log("I can win this");
+                        return i;
+                    }
                     if (int.Parse(data[boardState][i.ToString()].ToString()) == 0)
                         banned.Add(i);
                 }
@@ -83,7 +88,6 @@ public class SCR_BestGatoPlayerLAN : MonoBehaviour
     public void DeleteBadOption()
     {
         //saves the last mistake to never do it again
-        string past = "";
         JsonData data = JsonMapper.ToObject(PlayerPrefs.GetString("data"));
         Debug.Log(lastindex);
         if (!data.ContainsKey(lastBoardState))
@@ -98,6 +102,28 @@ public class SCR_BestGatoPlayerLAN : MonoBehaviour
         else
         {
             data[lastBoardState][lastindex.ToString()] = 0;
+        }
+
+        PlayerPrefs.SetString("data", JsonMapper.ToJson(data));
+    }
+
+    public void AddGoodOption()
+    {
+        //saves the last mistake to never do it again
+        JsonData data = JsonMapper.ToObject(PlayerPrefs.GetString("data"));
+        Debug.Log(lastindex);
+        if (!data.ContainsKey(boardState))
+        {
+            JsonData win = JsonMapper.ToObject("{}");
+            win[lastindex.ToString()] = 1;
+            data[boardState] = win;
+            PlayerPrefs.SetString("data", JsonMapper.ToJson(data));
+            Debug.Log(PlayerPrefs.GetString("data"));
+            data = JsonMapper.ToObject(PlayerPrefs.GetString("data"));
+        }
+        else
+        {
+            data[boardState][lastindex.ToString()] = 1;
         }
 
         PlayerPrefs.SetString("data", JsonMapper.ToJson(data));

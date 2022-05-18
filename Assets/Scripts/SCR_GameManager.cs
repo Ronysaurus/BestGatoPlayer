@@ -56,7 +56,7 @@ public class SCR_GameManager : MonoBehaviour
         int AIWins = int.Parse(AIWinsText.text);
         AIWins++;
         AIWinsText.text = AIWins.ToString();
-
+        IA.AddGoodOption();
         Debug.Log("IA WINS");
     }
 
