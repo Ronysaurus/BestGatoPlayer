@@ -11,18 +11,20 @@ public class SCR_BestGatoPlayerLAN : MonoBehaviour
     private string boardState = "";
     private List<string> options;
     private List<string> randomOptions;
-    private List<string> banned;
+    private List<int> banned;
     private int lastindex;
     private string lastBoardState = "";
 
     private void Start()
     {
+        PlayerPrefs.DeleteAll();
         ideadText.text = "";
         options = new List<string>();
         randomOptions = new List<string>();
-        banned = new List<string>();
+        banned = new List<int>();
+        //Create data to save moves and "learn"
         if (!PlayerPrefs.HasKey("data"))
-            PlayerPrefs.SetString("data", "");
+            PlayerPrefs.SetString("data", "{}");
         Debug.Log(PlayerPrefs.GetString("data"));
     }
 
@@ -30,13 +32,16 @@ public class SCR_BestGatoPlayerLAN : MonoBehaviour
     {
         ideadText.text = "";
         boardState = "";
+        //save the current state of the board to plan the next move
         for (int i = 0; i < 9; i++)
         {
             boardState += SCR_GameManager.boardMap[i / 3, i % 3].ToString();
         }
         Debug.Log(boardState);
+        //choose the move to play and save it
         int buttonIndex = lastindex = ChooseAction();
         Debug.Log(buttonIndex);
+        //show the selected move in game
         SCr_ButtonClass.buttons[buttonIndex].GetComponent<SCr_ButtonClass>().PickFromAI();
     }
 
@@ -44,17 +49,25 @@ public class SCR_BestGatoPlayerLAN : MonoBehaviour
     {
         options.Clear();
         banned.Clear();
+        //get the saved data
         JsonData data = JsonMapper.ToObject(PlayerPrefs.GetString("data"));
+        //if there's a state already saved uses that data
         if (data.ContainsKey(boardState))
         {
             Debug.Log("DejaVu");
-            string result = data[boardState].ToString();
-            for (int i = 0; i < result.Split(',').Length; i++)
-                banned.Add(result.Split(',')[i]);
+            for (int i = 0; i < 10; i++)
+            {
+                if (data[boardState].ContainsKey(i.ToString()))
+                {
+                    if (int.Parse(data[boardState][i.ToString()].ToString()) == 0)
+                        banned.Add(i);
+                }
+            }
         }
+        //sees all passible options
         for (int i = 0; i < 9; i++)
         {
-            if (SCR_GameManager.boardMap[i / 3, i % 3] == 0 && !banned.Contains(i.ToString()))
+            if (SCR_GameManager.boardMap[i / 3, i % 3] == 0 && !banned.Contains(i))
                 options.Add(i.ToString());
         }
 
@@ -63,22 +76,31 @@ public class SCR_BestGatoPlayerLAN : MonoBehaviour
         else
             lastBoardState = boardState;
 
+        //selects a random move from all viable options
         return int.Parse(options[Random.Range(0, options.Count)]);
     }
 
     public void DeleteBadOption()
     {
+        //saves the last mistake to never do it again
         string past = "";
         JsonData data = JsonMapper.ToObject(PlayerPrefs.GetString("data"));
-        if (data.ContainsKey(boardState))
-        {
-            past = data[boardState].ToString();
-            Debug.Log("new mistake");
-        }
         Debug.Log(lastindex);
-        data[lastBoardState] = past + lastindex.ToString() + ",";
-        PlayerPrefs.SetString("data", data.ToString());
-        Debug.Log("boardState: " + lastBoardState + " mistakes: " + past + lastindex.ToString());
+        if (!data.ContainsKey(lastBoardState))
+        {
+            JsonData mistake = JsonMapper.ToObject("{}");
+            mistake[lastindex.ToString()] = 0;
+            data[lastBoardState] = mistake;
+            PlayerPrefs.SetString("data", JsonMapper.ToJson(data));
+            Debug.Log(PlayerPrefs.GetString("data"));
+            data = JsonMapper.ToObject(PlayerPrefs.GetString("data"));
+        }
+        else
+        {
+            data[lastBoardState][lastindex.ToString()] = 0;
+        }
+
+        PlayerPrefs.SetString("data", JsonMapper.ToJson(data));
     }
 
     public void Surrender()

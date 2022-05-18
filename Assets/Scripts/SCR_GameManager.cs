@@ -60,9 +60,9 @@ public class SCR_GameManager : MonoBehaviour
         Debug.Log("IA WINS");
     }
 
-    public  void PlayerWin()
+    public void PlayerWin()
     {
-        endGame = true; 
+        endGame = true;
         int playerWins = int.Parse(playerWinsText.text);
         playerWins++;
         playerWinsText.text = playerWins.ToString();
@@ -151,7 +151,7 @@ public class SCR_GameManager : MonoBehaviour
     public void ResetBoard()
     {
         endGame = false;
-        GameObject [] buttons = SCr_ButtonClass.buttons;
+        GameObject[] buttons = SCr_ButtonClass.buttons;
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 3; j++)
