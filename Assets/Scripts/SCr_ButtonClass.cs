@@ -9,6 +9,7 @@ public class SCr_ButtonClass : MonoBehaviour
     private void Start()
     {
         buttons = GameObject.FindGameObjectsWithTag("buttons");
+        this.GetComponent<Button>().onClick.AddListener(OnButtonClicked);
     }
 
     public void OnButtonClicked()

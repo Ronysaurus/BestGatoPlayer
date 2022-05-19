@@ -17,7 +17,6 @@ public class SCR_BestGatoPlayerLAN : MonoBehaviour
 
     private void Start()
     {
-        PlayerPrefs.DeleteAll();
         ideadText.text = "";
         options = new List<string>();
         randomOptions = new List<string>();
