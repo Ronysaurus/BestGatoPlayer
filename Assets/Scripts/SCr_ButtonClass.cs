@@ -6,8 +6,12 @@ public class SCr_ButtonClass : MonoBehaviour
     public bool active, playerColor;
     public static GameObject[] buttons;
 
+    private Color Cplayer, CAI;
+
     private void Start()
     {
+        Cplayer = new Color(0.18f, 0.769f, 0.714f);
+        CAI = new Color(0.906f, 0.114f, 0.212f);
         buttons = GameObject.FindGameObjectsWithTag("buttons");
         this.GetComponent<Button>().onClick.AddListener(OnButtonClicked);
     }
@@ -21,12 +25,12 @@ public class SCr_ButtonClass : MonoBehaviour
             return;
         active = true;
         playerColor = SCR_GameManager.isPlayerTurn;
-        GetComponent<Image>().color = playerColor ? Color.blue : Color.red;
+        GetComponent<Image>().color = playerColor ? Cplayer : CAI;
         for (int i = 0; i < 9; i++)
         {
             if (buttons[i] == this.gameObject)
             {
-                SCR_GameManager.boardMap[i / 3 , i % 3] = playerColor ? 1 : 2;
+                SCR_GameManager.boardMap[i / 3, i % 3] = playerColor ? 1 : 2;
                 SCR_BestGatoPlayerLAN.lastButtonClicked = i;
             }
         }
@@ -37,12 +41,12 @@ public class SCr_ButtonClass : MonoBehaviour
     {
         active = true;
         playerColor = SCR_GameManager.isPlayerTurn;
-        GetComponent<Image>().color = playerColor ? Color.blue : Color.red;
+        GetComponent<Image>().color = playerColor ? Cplayer : CAI;
         for (int i = 0; i < 9; i++)
         {
             if (buttons[i] == this.gameObject)
             {
-                SCR_GameManager.boardMap[i / 3 , i % 3] = playerColor ? 1 : 2;
+                SCR_GameManager.boardMap[i / 3, i % 3] = playerColor ? 1 : 2;
                 SCR_BestGatoPlayerLAN.lastButtonClicked = i;
             }
         }
