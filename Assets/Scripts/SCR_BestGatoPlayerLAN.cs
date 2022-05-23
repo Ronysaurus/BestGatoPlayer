@@ -41,7 +41,13 @@ public class SCR_BestGatoPlayerLAN : MonoBehaviour
         int buttonIndex = lastindex = ChooseAction();
         Debug.Log(buttonIndex);
         //show the selected move in game
-        SCr_ButtonClass.buttons[buttonIndex].GetComponent<SCr_ButtonClass>().PickFromAI();
+        for (int i = 0; i < 9; i++)
+        {
+            if (buttonIndex == SCr_ButtonClass.buttons[i].GetComponent<SCr_ButtonClass>().index)
+            {
+                SCr_ButtonClass.buttons[i].GetComponent<SCr_ButtonClass>().PickFromAI();
+            }
+        }
     }
 
     private int ChooseAction()
@@ -54,7 +60,7 @@ public class SCR_BestGatoPlayerLAN : MonoBehaviour
         if (data.ContainsKey(boardState))
         {
             Debug.Log("DejaVu");
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 9; i++)
             {
                 if (data[boardState].ContainsKey(i.ToString()))
                 {
@@ -142,7 +148,15 @@ public class SCR_BestGatoPlayerLAN : MonoBehaviour
             if (SCR_GameManager.boardMap[i / 3, i % 3] == 0)
                 randomOptions.Add(i.ToString());
         }
-        SCr_ButtonClass.buttons[int.Parse(options[Random.Range(0, options.Count)])].GetComponent<SCr_ButtonClass>().PickFromAI();
+
+        int choice = int.Parse(options[Random.Range(0, options.Count)]);
+        for (int i = 0; i < 9; i++)
+        {
+            if (choice == SCr_ButtonClass.buttons[i].GetComponent<SCr_ButtonClass>().index)
+            {
+                SCr_ButtonClass.buttons[i].GetComponent<SCr_ButtonClass>().PickFromAI();
+            }
+        }
     }
 
     public void ResetAI()

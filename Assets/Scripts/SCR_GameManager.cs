@@ -151,12 +151,11 @@ public class SCR_GameManager : MonoBehaviour
     public void ResetBoard()
     {
         endGame = false;
-        GameObject[] buttons = SCr_ButtonClass.buttons;
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 3; j++)
             {
-                buttons[(i * 3) + j].GetComponent<SCr_ButtonClass>().ResetButton();
+                SCr_ButtonClass.buttons[(i * 3) + j].GetComponent<SCr_ButtonClass>().ResetButton();
                 boardMap[i, j] = 0;
             }
         }
