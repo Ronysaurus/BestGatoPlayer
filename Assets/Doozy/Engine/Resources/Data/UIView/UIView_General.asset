@@ -16,3 +16,6 @@ MonoBehaviour:
   DatabaseType: 2
   Names:
   - Unnamed
+  - MainMenu
+  - Options
+  - Credits

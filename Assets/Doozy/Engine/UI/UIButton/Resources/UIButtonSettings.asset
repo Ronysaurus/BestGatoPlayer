@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: UIButtonSettings
   m_EditorClassIdentifier: 
   database: {fileID: 11400000, guid: 6143c47b830e7534ea574b49302ced91, type: 2}
-  InputMode: 2
+  InputMode: 0
   KeyCode: 13
   KeyCodeAlt: 32
   ClickMode: 0

@@ -1,12 +1,11 @@
 ﻿using LitJson;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class SCR_BestGatoPlayerLAN : MonoBehaviour
 {
     public static int lastButtonClicked;
-    public Text ideadText;
+    public TMPro.TextMeshProUGUI ideadText;
 
     private string boardState = "";
     private List<string> options;

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 
 public class SCR_GameManager : MonoBehaviour
 {
@@ -12,10 +11,19 @@ public class SCR_GameManager : MonoBehaviour
 
     private static SCR_BestGatoPlayerLAN IA;
 
-    public Text playerWinsText, AIWinsText;
+    public TMPro.TextMeshProUGUI playerWinsText, AIWinsText;
 
     private void Start()
     {
+        if (!PlayerPrefs.HasKey("player"))
+        {
+            PlayerPrefs.SetInt("player", 0);
+            PlayerPrefs.SetInt("ai", 0);
+        }
+
+        playerWinsText.text = PlayerPrefs.GetInt("player").ToString();
+        AIWinsText.text = PlayerPrefs.GetInt("ai").ToString();
+
         boardMap = new int[3, 3];
 
         IA = FindObjectOfType<SCR_BestGatoPlayerLAN>();
@@ -53,9 +61,8 @@ public class SCR_GameManager : MonoBehaviour
     private void IAWin()
     {
         endGame = true;
-        int AIWins = int.Parse(AIWinsText.text);
-        AIWins++;
-        AIWinsText.text = AIWins.ToString();
+        PlayerPrefs.SetInt("ai", PlayerPrefs.GetInt("ai") + 1);
+        AIWinsText.text = PlayerPrefs.GetInt("ai").ToString();
         IA.AddGoodOption();
         Debug.Log("IA WINS");
     }
@@ -63,9 +70,8 @@ public class SCR_GameManager : MonoBehaviour
     public void PlayerWin()
     {
         endGame = true;
-        int playerWins = int.Parse(playerWinsText.text);
-        playerWins++;
-        playerWinsText.text = playerWins.ToString();
+        PlayerPrefs.SetInt("player", PlayerPrefs.GetInt("player") + 1);
+        playerWinsText.text = PlayerPrefs.GetInt("player").ToString();
         Debug.Log("Player Wins");
         IA.DeleteBadOption();
     }
