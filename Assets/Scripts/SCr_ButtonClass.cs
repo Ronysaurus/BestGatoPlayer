@@ -5,7 +5,7 @@ public class SCr_ButtonClass : MonoBehaviour
 {
     public bool active, playerColor;
     public static GameObject[] buttons;
-    public int index;
+    public int[] index;
 
     private Color Cplayer, CAI;
 
@@ -27,8 +27,8 @@ public class SCr_ButtonClass : MonoBehaviour
         active = true;
         playerColor = SCR_GameManager.isPlayerTurn;
         GetComponent<Image>().color = playerColor ? Cplayer : CAI;
-        SCR_GameManager.boardMap[index / 3, index % 3] = playerColor ? 1 : 2;
-        SCR_BestGatoPlayerLAN.lastButtonClicked = index;
+        SCR_GameManager.boardMap[index[0] / 3, index[0] % 3] = playerColor ? 1 : 2;
+        SCR_BestGatoPlayerLAN.lastButtonClicked = index[0];
         FindObjectOfType<SCR_GameManager>().NextTurn();
     }
 
@@ -37,8 +37,8 @@ public class SCr_ButtonClass : MonoBehaviour
         active = true;
         playerColor = SCR_GameManager.isPlayerTurn;
         GetComponent<Image>().color = playerColor ? Cplayer : CAI;
-        SCR_GameManager.boardMap[index / 3, index % 3] = playerColor ? 1 : 2;
-        SCR_BestGatoPlayerLAN.lastButtonClicked = index;
+        SCR_GameManager.boardMap[index[0] / 3, index[0] % 3] = playerColor ? 1 : 2;
+        SCR_BestGatoPlayerLAN.lastButtonClicked = index[0];
         FindObjectOfType<SCR_GameManager>().NextTurn();
     }
 

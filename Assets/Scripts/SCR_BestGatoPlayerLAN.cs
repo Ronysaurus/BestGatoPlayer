@@ -8,15 +8,17 @@ public class SCR_BestGatoPlayerLAN : MonoBehaviour
     public static int lastButtonClicked;
     public TMPro.TextMeshProUGUI ideadText;
 
-    private string boardState = "";
+    private string[] boardState;
     private List<string> options;
     private List<string> randomOptions;
     private List<int> banned;
     private int lastindex;
-    private string lastBoardState = "";
+    private string[] lastBoardState;
 
     private void Start()
     {
+        boardState = new string[6];
+        lastBoardState = new string[6];
         ideadText.text = "";
         options = new List<string>();
         randomOptions = new List<string>();
@@ -30,11 +32,11 @@ public class SCR_BestGatoPlayerLAN : MonoBehaviour
     public void PlayTurn()
     {
         ideadText.text = "";
-        boardState = "";
+        boardState[0] = "";
         //save the current state of the board to plan the next move
         for (int i = 0; i < 9; i++)
         {
-            boardState += SCR_GameManager.boardMap[i / 3, i % 3].ToString();
+            boardState[0] += SCR_GameManager.boardMap[i / 3, i % 3].ToString();
         }
         Debug.Log(boardState);
         //choose the move to play and save it
@@ -43,7 +45,7 @@ public class SCR_BestGatoPlayerLAN : MonoBehaviour
         //show the selected move in game
         for (int i = 0; i < 9; i++)
         {
-            if (buttonIndex == SCr_ButtonClass.buttons[i].GetComponent<SCr_ButtonClass>().index)
+            if (buttonIndex == SCr_ButtonClass.buttons[i].GetComponent<SCr_ButtonClass>().index[0])
             {
                 SCr_ButtonClass.buttons[i].GetComponent<SCr_ButtonClass>().PickFromAI();
             }
@@ -57,19 +59,19 @@ public class SCR_BestGatoPlayerLAN : MonoBehaviour
         //get the saved data
         JsonData data = JsonMapper.ToObject(PlayerPrefs.GetString("data"));
         //if there's a state already saved uses that data
-        if (data.ContainsKey(boardState))
+        if (data.ContainsKey(boardState[0]))
         {
             Debug.Log("DejaVu");
             for (int i = 0; i < 9; i++)
             {
-                if (data[boardState].ContainsKey(i.ToString()))
+                if (data[boardState[0]].ContainsKey(i.ToString()))
                 {
-                    if (int.Parse(data[boardState][i.ToString()].ToString()) == 1)
+                    if (int.Parse(data[boardState[0]][i.ToString()].ToString()) == 1)
                     {
                         Debug.Log("I can win this");
                         return i;
                     }
-                    if (int.Parse(data[boardState][i.ToString()].ToString()) == 0)
+                    if (int.Parse(data[boardState[0]][i.ToString()].ToString()) == 0)
                         banned.Add(i);
                 }
             }
@@ -95,18 +97,18 @@ public class SCR_BestGatoPlayerLAN : MonoBehaviour
         //saves the last mistake to never do it again
         JsonData data = JsonMapper.ToObject(PlayerPrefs.GetString("data"));
         Debug.Log(lastindex);
-        if (!data.ContainsKey(lastBoardState))
+        if (!data.ContainsKey(lastBoardState[0]))
         {
             JsonData mistake = JsonMapper.ToObject("{}");
             mistake[lastindex.ToString()] = 0;
-            data[lastBoardState] = mistake;
+            data[lastBoardState[0]] = mistake;
             PlayerPrefs.SetString("data", JsonMapper.ToJson(data));
             Debug.Log(PlayerPrefs.GetString("data"));
             data = JsonMapper.ToObject(PlayerPrefs.GetString("data"));
         }
         else
         {
-            data[lastBoardState][lastindex.ToString()] = 0;
+            data[lastBoardState[0]][lastindex.ToString()] = 0;
         }
 
         PlayerPrefs.SetString("data", JsonMapper.ToJson(data));
@@ -117,18 +119,18 @@ public class SCR_BestGatoPlayerLAN : MonoBehaviour
         //saves the last mistake to never do it again
         JsonData data = JsonMapper.ToObject(PlayerPrefs.GetString("data"));
         Debug.Log(lastindex);
-        if (!data.ContainsKey(boardState))
+        if (!data.ContainsKey(boardState[0]))
         {
             JsonData win = JsonMapper.ToObject("{}");
             win[lastindex.ToString()] = 1;
-            data[boardState] = win;
+            data[boardState[0]] = win;
             PlayerPrefs.SetString("data", JsonMapper.ToJson(data));
             Debug.Log(PlayerPrefs.GetString("data"));
             data = JsonMapper.ToObject(PlayerPrefs.GetString("data"));
         }
         else
         {
-            data[boardState][lastindex.ToString()] = 1;
+            data[boardState[0]][lastindex.ToString()] = 1;
         }
 
         PlayerPrefs.SetString("data", JsonMapper.ToJson(data));
@@ -152,7 +154,7 @@ public class SCR_BestGatoPlayerLAN : MonoBehaviour
         int choice = int.Parse(options[Random.Range(0, options.Count)]);
         for (int i = 0; i < 9; i++)
         {
-            if (choice == SCr_ButtonClass.buttons[i].GetComponent<SCr_ButtonClass>().index)
+            if (choice == SCr_ButtonClass.buttons[i].GetComponent<SCr_ButtonClass>().index[0])
             {
                 SCr_ButtonClass.buttons[i].GetComponent<SCr_ButtonClass>().PickFromAI();
             }
