@@ -1,6 +1,7 @@
 ﻿using LitJson;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SCR_BestGatoPlayerLAN : MonoBehaviour
 {
@@ -158,8 +159,8 @@ public class SCR_BestGatoPlayerLAN : MonoBehaviour
         }
     }
 
-    public void ResetAI()
+    public void MainMenu()
     {
-        PlayerPrefs.DeleteAll();
+        SceneManager.LoadScene(0);
     }
 }
